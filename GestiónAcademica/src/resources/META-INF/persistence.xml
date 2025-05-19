@@ -22,11 +22,12 @@
             <!-- Configuración de Hibernate -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
-            <property name="hibernate.show_sql" value="true"/>
-            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.format_sql" value="false"/>
             
             <!-- Cambia este valor para alternar entre JDBC y JPA -->
             <property name="persistence.provider" value="jdbc"/> <!-- jpa o jdbc -->
+            
         </properties>
     </persistence-unit>
 </persistence>
