@@ -3,7 +3,6 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
     
-    <!-- Cambia este valor para alternar entre JDBC y JPA -->
     <persistence-unit name="GestionAcademica" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         
@@ -24,10 +23,6 @@
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.format_sql" value="false"/>
-            
-            <!-- Cambia este valor para alternar entre JDBC y JPA -->
-            <property name="persistence.provider" value="jdbc"/> <!-- jpa o jdbc -->
-            
         </properties>
     </persistence-unit>
 </persistence>

@@ -8,9 +8,8 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
 import dao.AcademiaDAO;
-import dao.AcademiaDAOImplJDBC;
+import dao.AcademiaDAOFactory;
 import entidades.Alumno;
 import entidades.Curso;
 import entidades.Matricula;
@@ -21,7 +20,7 @@ public class InsertarHelper {
     
     public InsertarHelper() {
         System.out.println("Creando el DAO...");
-        dao = new AcademiaDAOImplJDBC();
+        dao = AcademiaDAOFactory.getAcademiaDAO();
     }
     
     private void insertarAlumno(int id, String nombre, String rutaFoto) {
@@ -34,13 +33,13 @@ public class InsertarHelper {
         Alumno alumno = new Alumno(id, nombre);
         
         File file = new File(rutaFoto);
-		
-		byte[] foto=null;
-		try {
-			foto = getBytesFromFile(file);
-		} catch (IOException e) { e.printStackTrace(); }
-		
-		alumno.setFoto(foto);
+        
+        byte[] foto=null;
+        try {
+            foto = getBytesFromFile(file);
+        } catch (IOException e) { e.printStackTrace(); }
+        
+        alumno.setFoto(foto);
         System.out.println("Grabando el nuevo alumno...");
         try {
             if (dao.grabarAlumno(alumno) == 1) {
@@ -61,17 +60,15 @@ public class InsertarHelper {
         alumno.setNombreAlumno(nombre);
         
         if (rutaFoto!=null) {
-			System.out.println("\nModificando la foto del alumno con id: "+id+" y nombre: "+alumno.getNombreAlumno());
-			// Leemos la foto del disco, la guardamos en el
-			// objeto Alumno y posteriormente se graba en la BD
-			File file = new File(rutaFoto);
-			
-			byte[] foto=null;
-			try {
-				foto = getBytesFromFile(file);
-			} catch (IOException e) { e.printStackTrace(); }
-			alumno.setFoto(foto);
-		}
+            System.out.println("\nModificando la foto del alumno con id: "+id+" y nombre: "+alumno.getNombreAlumno());
+            File file = new File(rutaFoto);
+            
+            byte[] foto=null;
+            try {
+                foto = getBytesFromFile(file);
+            } catch (IOException e) { e.printStackTrace(); }
+            alumno.setFoto(foto);
+        }
 
         
         try {
@@ -169,49 +166,39 @@ public class InsertarHelper {
     }
     
     private static byte[] getBytesFromFile(File file) throws IOException {
-	    InputStream is = new FileInputStream(file);
+        InputStream is = new FileInputStream(file);
 
-	    // Obtener el tamaño del fichero
-	    long length = file.length();
+        long length = file.length();
 
-	    // No podemos crear un array usando un tipo long.
-	    // Es necesario que sea un tipo int.
-	    // Antes de convertirlo a int, comprobamos
-	    // que el fichero no es mayor que Integer.MAX_VALUE
-	    if (length > Integer.MAX_VALUE) {	        
-	    	System.out.println("Fichero demasiado grande!");
-	    	System.exit(1);
-	    }
+        if (length > Integer.MAX_VALUE) {            
+            System.out.println("Fichero demasiado grande!");
+            System.exit(1);
+        }
 
-	    // Creamos el byte array que almacenará 
-	    // temporalmente los datos leidos
-	    byte[] bytes = new byte[(int)length];
+        byte[] bytes = new byte[(int)length];
 
-	    // Leemos
-	    int offset = 0;
-	    int numRead = 0;
-	    while (offset < bytes.length
-	           && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
-	        offset += numRead;
-	    }
+        int offset = 0;
+        int numRead = 0;
+        while (offset < bytes.length
+               && (numRead=is.read(bytes, offset, bytes.length-offset)) >= 0) {
+            offset += numRead;
+        }
 
-	    // Comprobacion de que todos los bytes se han leido
-	    if (offset < bytes.length) {
-	        throw new IOException("No se ha podido leer complemtamente el fichero "+file.getName());
-	    }
+        if (offset < bytes.length) {
+            throw new IOException("No se ha podido leer complemtamente el fichero "+file.getName());
+        }
 
-	    // Cerrar el input stream y devolver los bytes
-	    is.close();
-	    return bytes;
-	}
+        is.close();
+        return bytes;
+    }
 
     
     public static void main(String[] args) {
         InsertarHelper programa = new InsertarHelper();
         programa.insertarAlumno(1000,"Daniel","imagenes/cara2.jpg");
-		programa.insertarAlumno(1001,"Francisco","imagenes/cara4.jpg");
-		programa.modificarAlumno(1000, "Ezequiel",null);		
-		programa.modificarAlumno(1000, "Agapito","imagenes/cara1.jpg");
+        programa.insertarAlumno(1001,"Francisco","imagenes/cara4.jpg");
+        programa.modificarAlumno(1000, "Ezequiel",null);        
+        programa.modificarAlumno(1000, "Agapito","imagenes/cara1.jpg");
         programa.insertarCurso(500, "Java");
         programa.insertarCurso(501, ".NET");
         programa.modificarCurso(500, "Java avanzado");
