@@ -331,26 +331,28 @@ public class AcademiaDAOImplJDBC implements AcademiaDAO {
 
 	@Override
 	public long getIdMatricula(int idAlumno, int idCurso) {
-		long idMatricula = 0;
-		Connection con = null;
-		try {
-			con = getConnection();
-			PreparedStatement ps = con.prepareStatement("select id_matricula from matriculas where id_alumno = ? and id_curso = ?");
-			ps.setInt(1, idAlumno);
-			ps.setInt(2, idCurso);
-			ResultSet rs = ps.executeQuery();			
-			if (rs.next()) {
-				idMatricula = rs.getLong(1);
-			}
-			rs.close();
-			ps.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			releaseConnection(con);
-		}
-		return idMatricula;
+	    long idMatricula = -1;            // <- inicializamos a -1
+	    Connection con = null;
+	    try {
+	        con = getConnection();
+	        PreparedStatement ps = con.prepareStatement(
+	            "select id_matricula from matriculas where id_alumno = ? and id_curso = ?");
+	        ps.setInt(1, idAlumno);
+	        ps.setInt(2, idCurso);
+	        ResultSet rs = ps.executeQuery();
+	        if (rs.next()) {
+	            idMatricula = rs.getLong(1);
+	        }
+	        rs.close();
+	        ps.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        releaseConnection(con);
+	    }
+	    return idMatricula;
 	}
+
 
 	@Override
 	public Matricula getMatricula(long idMatricula) {

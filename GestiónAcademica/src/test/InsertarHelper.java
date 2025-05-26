@@ -115,6 +115,12 @@ public class InsertarHelper {
     }
     
     private void insertarMatricula(int id_alumno, int id_curso) {
+    	long existente = dao.getIdMatricula(id_alumno, id_curso);
+        if (existente > 0) {
+            System.out.println("La matrícula del alumno " + id_alumno +
+                               " en el curso " + id_curso + " ya existe. No se insertará.");
+            return;
+        }
         if (dao.getIdMatricula(id_alumno, id_curso) != -1) {
             System.out.println("La matrícula del alumno " + id_alumno + " en el curso " + id_curso + " ya existe. No se insertará.");
             return;
